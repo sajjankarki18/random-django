@@ -1,0 +1,18 @@
+/* main file */
+.category-link{
+    text-decoration: none;
+    color: black;
+}
+h5{
+    color: red;
+}
+.photo-card{
+    margin-bottom: 20px;
+}
+.category{
+    margin-bottom: 30px;
+}
+
+.Logout-btn{
+    margin-top: 10px;
+}

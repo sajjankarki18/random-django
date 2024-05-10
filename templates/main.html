@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>main</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            {% if user.is_authenticated%}
+          <a class="navbar-brand">{{user.username}}</a>
+          {% else %}
+          <a class="navbar-brand">Navbar</a>
+          {% endif %}
+          <form class="d-flex">
+            <a href="{% url 'logoutUser' %}" class="btn btn-outline-success">logout</a>
+          </form>
+        </div>
+      </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 category">
+                <div class="card">
+                    <div class="card-header">
+                       <a class="category-link" href="{% url 'main' %}">All</a>
+                    </div>
+                    {% for category in categories %}
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">
+                        <a class="category-link" href="{% url 'main' %}?category={{category.name}}">{{category.name}}</a>
+                      </li>
+                    </ul>
+                    {% endfor %}
+                    <a href="{% url 'addphoto' %}" class="btn btn-outline-dark">Add photo</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    {% for photo in photos %}
+                    <div class="col-md-5">
+                        <div class="card photo-card">
+                            <img src="{{photo.image.url}}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                              <p class="card-text">Category:{{photo.category}} </p>
+                            </div>
+                            <a href="{% url 'photo' photo.id %}" class="btn btn-outline-dark">view Photo</a>
+                            <a href="{% url 'deletephoto' photo.id %}" style="margin-top: 10px;" class="btn btn-outline-danger">Delete Photo</a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <h5>no photos...</h5>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
