@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Register</title>
+    <style>
+        .register-text{
+            margin-top: 10px;
+        }
+        .register-link{
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body class="m-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <h2>Register to your account</h2>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                      <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">{{field.label}}</label>
+                        {{field}}
+                      </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-outline-dark">Sumbit</button>
+                    <p class="register-text">Already have an account?<a class="register-link" href="{% url 'loginUser' %}">Login Here</a></p>
+                    {% for message in messages %}
+                    <p style="color: red; margin-top: 20px;">{{message}}</p>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

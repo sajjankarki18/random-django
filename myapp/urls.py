@@ -7,6 +7,9 @@ urlpatterns = [
     path('deletephoto/<str:pk>/', views.deletephoto, name='deletephoto'),
     path('addphoto/', views.addphoto, name='addphoto'),
 
+    # user authentication paths
     path('loginUser/', views.loginUser, name='loginUser'),
-    path('logoutUser/', views.logoutUser, name='logoutUser')
+    path('logoutUser/', views.logoutUser, name='logoutUser'),
+    path('registerUser/', views.registerUser, name='registerUser')
+
 ]

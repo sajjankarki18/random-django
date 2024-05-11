@@ -4,6 +4,8 @@ from .models import Category, Photo
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import login, logout
 from django.contrib import messages
+from .forms import CustomCreationForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -24,24 +26,57 @@ def loginUser(request):
     else:
         return render(request, 'loginUser.html')
 
+def registerUser(request):
+    form = CustomCreationForm()
+
+    if request.method == 'POST':
+        form = CustomCreationForm(request.POST)
+        username = request.POST.get('username', '')
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+
+            if password1 == password2:
+                user = auth.authenticate(username=username, password=password1)
+
+                if user is not None:
+                    login(request, user)
+                    return redirect('main') 
+                else:
+                    messages.info(request,' user already exists!')
+                    return redirect('registerUser')
+                
+            else:
+                messages.info(request, 'enter a valid password')    
+                return redirect('registerUser')
+            
+    return render(request, 'registerUser.html', {'form': form})
+
+
 def logoutUser(request):
     logout(request)
     return redirect('loginUser')
     pass
 
+@login_required(login_url=loginUser)
 def main(request):
+    user = request.user
     category = request.GET.get('category')
 
     # if category is not selected return all category
     if category == None:
-        photos = Photo.objects.all()
+        photos = Photo.objects.filter(category__user = user)
     # else return or filter specific selected category
     else:
-        photos = Photo.objects.filter(category__name = category)
+        photos = Photo.objects.filter(category__name = category, category__user = user)
 
-    categories = Category.objects.all()
+    categories = Category.objects.filter(user=user)
     return render(request, 'main.html', {'categories': categories, 'photos': photos})
 
+@login_required(login_url=loginUser)
 def photo(request, pk):
     photos = Photo.objects.get(id=pk)
 
@@ -52,8 +87,11 @@ def deletephoto(request, pk):
     photo.delete()
     return redirect('main')
 
+@login_required(login_url=loginUser)
 def addphoto(request):
-    categories = Category.objects.all()
+    user = request.user
+    categories = user.category_set.all()
+    # categories = Category.objects.all()
 
     if request.method == 'POST':
         data = request.POST
@@ -64,7 +102,7 @@ def addphoto(request):
             category = Category.objects.get(id=data['category'])
         # creates a new category 
         elif data['new_category'] != '':
-            category = Category.objects.get_or_create(name=data['new_category'])
+            category = Category.objects.get_or_create(user=user, name=data['new_category'])
         else:
             category=None
 

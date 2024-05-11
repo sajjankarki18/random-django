@@ -12,17 +12,18 @@
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
             {% if user.is_authenticated%}
-          <a class="navbar-brand">{{user.username}}</a>
+          <a class="navbar-brand"><b><i>{{user.username}}</i></b></a>
           {% else %}
           <a class="navbar-brand">Navbar</a>
           {% endif %}
+          <a class="navbar-brand"><b><i>Gallery management system</i></b></a>
           <form class="d-flex">
             <a href="{% url 'logoutUser' %}" class="btn btn-outline-success">logout</a>
           </form>
         </div>
       </nav>
     <div class="container">
-        <div class="row">
+        <div class="row section" style="margin-top: 20px;">
             <div class="col-md-3 category">
                 <div class="card">
                     <div class="card-header">
